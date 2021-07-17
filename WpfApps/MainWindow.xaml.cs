@@ -26,11 +26,22 @@ namespace WpfApps
             InitializeComponent();
         }
 
-        private void button_Click(object sender, RoutedEventArgs e)
+        private async void button_Click(object sender, RoutedEventArgs e)
         {
             textBox.Text = "Button Clicked !";
-            Thread.Sleep(1000);
-            textBox.Text = "";
+
+            await Task.Run(async () => {
+
+                await Task.Delay(1000);
+
+                // To avoid UI cross thread problem.
+                await Dispatcher.BeginInvoke(new Action(() => { textBox.Text = ""; }));
+
+            });
+
+            //or 
+            //await Task.Delay(1000);
+
         }
     }
 }
